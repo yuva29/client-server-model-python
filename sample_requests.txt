@@ -1,0 +1,58 @@
+Sample requests from client:
+
+Read:
+
+{"read":[ {"filename":"test.txt"}]} ## to read the complete contents of the file
+
+{"read":[ {"filename":"test.txt", "num_chars":3}]} ## to read particular no of characters(num_chars) from begining
+
+{"read":[ {"filename":"test.txt", "num_chars":10000}]} ## this read the whole file if total_num_characters_in_file<10000
+
+{"read":[ {"filename":"test.txt", "offset":3}]} ## reads the complete file from 4th character
+
+{"read":[ {"filename":"test.txt", "offset":10000}]} ## reads no data if total_num_characters_in_file<10000
+
+{"read":[ {"filename":"test.txt", "offset":3, "num_chars":4}]} ## reads 4 characters from the 4th character of the file
+
+{"read":[ {"filename":"test.txt", "num_chars":23, "end":1}]} # reads last 23 characters of the file
+
+{"read":[ {"filename":"test.txt", "num_chars":23, "end":1}, {"filename":"test.txt"}, {"filename":"test.txt", "num_chars":10000}]} ## multiple read operations in a single command
+
+
+Update:
+
+{"update":[{"filename":"test.txt"}]} ## invalid command, data needs to be specified for update operation
+
+{"update":[{"filename":"test.txt","data":"First line\n"}]} ## prepends the given data to the file
+
+{"update":[{"filename":"test.txt","data":"first data to get updated", "start_offset":40}]} ## inserts the given data at the 5th position of the file
+
+{"update":[{"filename":"test.txt","data":"first data to get updated", "start_offset":4, "end_offset":6}]} ## replaces the content between start_offset+1 and end_offset with the user given data. start_offset<end_offset otherwise its a invalid request
+
+{"update":[{"filename":"test.txt","data":"first data to get updated", "end_offset":4}]} ## replaces the content between 0 and end_offset with the user given data.
+
+{"update":[{"filename":"test.txt","data":"\nLast line\n", "end":1}]} ## if end == 1, the remaining start and end_offset attributes are ignored. It appends the give data at the end of the file
+
+{"update":[{"filename":"test.txt","data":"first data to get updated", "end":1}, {"filename":"test.txt","data":"first data to get updated", "start_offset":4}]} ## multiple update commands combined together
+
+Delete:
+
+{"delete":[ {"filename":"test.txt"}]} ## Deletes all the contents from the file
+
+{"delete":[ {"filename":"test.txt", "num_chars":4}]} ## deletes 4 characters from the begining of the file
+
+{"delete":[ {"filename":"test.txt", "num_chars":4, "start_offset":3}]} ## deletes 4 characters from 4th character in the file
+
+{"delete":[ {"filename":"test.txt", "end_offset":5, "start_offset":3}]} ## deletes characters between 4th and 5th position in the file
+
+{"delete":[ {"filename":"test.txt", "end_offset":5, "start_offset":3, "num_chars":4}]} ## behaves exactly like the above case, ignores the num_chars if end_offset is specified
+
+{"delete":[ {"filename":"test.txt", "end":1, "num_chars":4}]} ## if end == 1, deletes the last 4 characters of the file
+
+{"delete":[ {"filename":"test.txt", "end":1, "num_chars":4},{"filename":"test.txt", "end_offset":3, "start_offset":5, "num_chars":4} ]} ## multiple delete requests in a single client request
+
+{"delete":[ {"filename":"test.txt", "end_offset":3, "start_offset":5}]} ## ERROR: Invalid offset values. start_offset<end_offset
+
+Combination of all the operations:
+{"read":[{"filename":"test.txt"}], "update":[{"filename":"test.txt", "data":"Works fine"}]}
+{"read":[ {"filename":"test.txt"}, {"filename":"test.txt", "offset":5} ],"update":[{"filename":"test.txt", "data": "Works fine"}], "delete":[{"filename":"test.txt", "end":1, "num_chars":4}]}

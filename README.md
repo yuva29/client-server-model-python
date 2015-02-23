@@ -8,12 +8,12 @@ Design and provide example code of client and server operations in Python.
 
 
 Execution:
-python server.py
-python client.py
+1. python server.py
+2. python client.py
 
 Lise of files and description:
-server.py : Contains the server code for manipulating files on behalf of client
-client.py : Interface for client, through which the user can make request to the server
-test.txt : Sample file
-sample_requests : Contains list of sample requests that can be sent to the server
-Design and Implementation : Contains the design, implementation details and algorithm definition
+1. server.py : Contains the server code for manipulating files on behalf of client
+2. client.py : Interface for client, through which the user can make request to the server
+3. test.txt : Sample file
+4. sample_requests : Contains list of sample requests that can be sent to the server
+5. Design and Implementation : Contains the design, implementation details and algorithm definition
